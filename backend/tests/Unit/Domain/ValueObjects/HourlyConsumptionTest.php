@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\Domain\ValueObjects;
+
 use App\Domain\ValueObjects\HourlyConsumption;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\TestCase;
