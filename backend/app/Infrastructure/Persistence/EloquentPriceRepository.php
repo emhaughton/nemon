@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence;
 
 use App\Domain\Contracts\PriceRepository;
+use App\Domain\Exceptions\MissingDateRangeException;
 use App\Domain\ValueObjects\HourlyPrice;
 use App\Models\Price;
 use Carbon\CarbonImmutable;
@@ -13,6 +14,8 @@ final class EloquentPriceRepository implements PriceRepository
 {
     /**
      * @return HourlyPrice[]
+     *
+     * @throws MissingDateRangeException
      */
     public function between(
         CarbonImmutable $from,
@@ -26,6 +29,15 @@ final class EloquentPriceRepository implements PriceRepository
             ])
             ->orderBy('date')
             ->get();
+
+        $expectedDays = $from->diffInDays($to) + 1;
+
+        if ($rows->count() !== $expectedDays) {
+            throw MissingDateRangeException::between(
+                $from,
+                $to,
+            );
+        }
 
         $result = [];
 
