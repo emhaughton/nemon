@@ -1,0 +1,158 @@
+name: ${PROJECT_NAME}
+
+services:
+
+  nginx:
+    image: nginx:${NGINX_VERSION}
+
+    container_name: ${PROJECT_NAME}-nginx
+
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./backend:/backend
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+    depends_on:
+      php:
+        condition: service_started
+
+    networks:
+      - starter
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+        UID: ${UID}
+        GID: ${GID}
+
+    container_name: ${PROJECT_NAME}-php
+
+    restart: unless-stopped
+
+    working_dir: /backend
+
+    volumes:
+      - ./backend:/backend
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+    networks:
+      - starter
+
+  node:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+      args:
+        NODE_VERSION: ${NODE_VERSION}
+
+    container_name: ${PROJECT_NAME}-node
+
+    restart: unless-stopped
+
+    working_dir: /frontend
+
+    tty: true
+
+    ports:
+      - "5173:5173"
+
+    volumes:
+      - ./frontend:/frontend
+
+    networks:
+      - starter
+
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+
+    container_name: ${PROJECT_NAME}-mysql
+
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+    networks:
+      - starter
+
+  redis:
+    image: redis:${REDIS_VERSION}
+
+    container_name: ${PROJECT_NAME}-redis
+
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    networks:
+      - starter
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+
+    container_name: ${PROJECT_NAME}-mailpit
+
+    restart: unless-stopped
+
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+    networks:
+      - starter
+
+  phpmyadmin:
+    image: phpmyadmin:${PMA_VERSION}
+
+    container_name: ${PROJECT_NAME}-phpmyadmin
+
+    restart: unless-stopped
+
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+
+    ports:
+      - "8081:80"
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    networks:
+      - starter
+
+volumes:
+  mysql_data:
+
+networks:
+  starter:
+    driver: bridge
