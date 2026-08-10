@@ -10,6 +10,6 @@ interface ExpressionEvaluator
 {
     public function evaluate(
         Formula $formula,
-        float $omiePrice,
+        float $omieMd,
     ): float;
 }
