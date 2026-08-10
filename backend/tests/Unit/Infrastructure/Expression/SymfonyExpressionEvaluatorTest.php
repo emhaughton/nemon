@@ -6,7 +6,7 @@ namespace Tests\Unit\Infrastructure\Expression;
 
 use App\Domain\Exceptions\InvalidFormulaException;
 use App\Domain\ValueObjects\Formula;
-use App\Infrastructure\ExpressionLanguage\SymfonyExpressionEvaluator;
+use App\Infrastructure\Formula\SymfonyExpressionEvaluator;
 use PHPUnit\Framework\TestCase;
 
 final class SymfonyExpressionEvaluatorTest extends TestCase

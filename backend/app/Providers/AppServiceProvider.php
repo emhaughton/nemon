@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Domain\Contracts\ConsumptionRepository;
 use App\Domain\Contracts\ExpressionEvaluator;
 use App\Domain\Contracts\PriceRepository;
-use App\Infrastructure\ExpressionLanguage\SymfonyExpressionEvaluator;
+use App\Infrastructure\Formula\SymfonyExpressionEvaluator;
 use App\Infrastructure\Persistence\EloquentConsumptionRepository;
 use App\Infrastructure\Persistence\EloquentPriceRepository;
 

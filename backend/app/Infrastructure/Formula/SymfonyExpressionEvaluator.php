@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\ExpressionLanguage;
+namespace App\Infrastructure\Formula;
 
 use App\Domain\Contracts\ExpressionEvaluator;
 use App\Domain\Exceptions\InvalidFormulaException;
