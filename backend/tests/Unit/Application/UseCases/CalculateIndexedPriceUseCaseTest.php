@@ -8,6 +8,7 @@ use App\Application\Assemblers\HourlyMeasurementAssembler;
 use App\Application\DTOs\CalculateIndexedPriceRequest;
 use App\Application\UseCases\CalculateIndexedPriceUseCase;
 use App\Domain\Services\IndexedPriceCalculator;
+use App\Domain\ValueObjects\Formula;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\TestCase;
 use Tests\Doubles\Fakes\FakeConsumptionRepository;
@@ -31,13 +32,15 @@ final class CalculateIndexedPriceUseCaseTest extends TestCase
             new CalculateIndexedPriceRequest(
                 from: CarbonImmutable::parse('2025-01-01'),
                 to: CarbonImmutable::parse('2025-01-01'),
-                formula: '([OMIE_MD] * 0.6) + 0.88',
+                formula: new Formula(
+                    '([OMIE_MD] * 0.6) + 0.88',
+                ),
             ),
         );
 
         $this->assertSame(
             2.0,
-            $response->indexedPrice,
+            $response->indexedPrice->value(),
         );
     }
 }

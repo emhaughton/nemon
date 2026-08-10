@@ -10,7 +10,6 @@ use App\Application\DTOs\CalculateIndexedPriceResponse;
 use App\Domain\Contracts\ConsumptionRepository;
 use App\Domain\Contracts\PriceRepository;
 use App\Domain\Services\IndexedPriceCalculator;
-use App\Domain\ValueObjects\Formula;
 
 final readonly class CalculateIndexedPriceUseCase
 {
@@ -42,12 +41,12 @@ final readonly class CalculateIndexedPriceUseCase
         );
 
         $indexedPrice = $this->calculator->calculate(
-            new Formula($request->formula),
+            $request->formula,
             $measurements,
         );
 
         return new CalculateIndexedPriceResponse(
-            $indexedPrice->value(),
+            $indexedPrice,
         );
     }
 }
