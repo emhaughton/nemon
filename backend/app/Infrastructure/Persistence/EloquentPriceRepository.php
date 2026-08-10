@@ -23,14 +23,27 @@ final class EloquentPriceRepository implements PriceRepository
     ): array {
 
         $rows = Price::query()
-            ->whereBetween('date', [
-                $from->toDateString(),
-                $to->toDateString(),
-            ])
+            ->whereDate(
+                'date',
+                '>=',
+                $from,
+            )
+            ->whereDate(
+                'date',
+                '<=',
+                $to,
+            )
             ->orderBy('date')
             ->get();
 
-        $expectedDays = $from->diffInDays($to) + 1;
+        $expectedDays = (int) ($from->diffInDays($to) + 1);
+
+        if ($rows->count() !== $expectedDays) {
+            throw MissingDateRangeException::between(
+                $from,
+                $to,
+            );
+        }
 
         if ($rows->count() !== $expectedDays) {
             throw MissingDateRangeException::between(
@@ -46,7 +59,7 @@ final class EloquentPriceRepository implements PriceRepository
             for ($hour = 1; $hour <= 25; $hour++) {
 
                 $result[] = new HourlyPrice(
-                    date: CarbonImmutable::parse($row->date),
+                    date: CarbonImmutable::instance($row->date),
                     hour: $hour,
                     price: (float) $row->{"h{$hour}"},
                 );

@@ -23,14 +23,20 @@ final class EloquentConsumptionRepository implements ConsumptionRepository
     ): array {
 
         $rows = Consumption::query()
-            ->whereBetween('date', [
-                $from->toDateString(),
-                $to->toDateString(),
-            ])
+            ->whereDate(
+                'date',
+                '>=',
+                $from,
+            )
+            ->whereDate(
+                'date',
+                '<=',
+                $to,
+            )
             ->orderBy('date')
             ->get();
 
-        $expectedDays = $from->diffInDays($to) + 1;
+        $expectedDays = (int) ($from->diffInDays($to) + 1);
 
         if ($rows->count() !== $expectedDays) {
             throw MissingDateRangeException::between(
@@ -46,7 +52,7 @@ final class EloquentConsumptionRepository implements ConsumptionRepository
             for ($hour = 1; $hour <= 25; $hour++) {
 
                 $result[] = new HourlyConsumption(
-                    date: CarbonImmutable::parse($row->date),
+                    date: CarbonImmutable::instance($row->date),
                     hour: $hour,
                     consumption: (float) $row->{"h{$hour}"},
                 );
