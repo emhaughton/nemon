@@ -8,12 +8,12 @@ use App\Application\DTOs\PaginatedResult;
 use App\Application\DTOs\Pagination;
 use App\Domain\Contracts\ConsumptionRepository;
 use App\Domain\Exceptions\MissingDateRangeException;
-use App\Domain\ValueObjects\DailyHourlyValues;
 use App\Domain\ValueObjects\HourlyConsumption;
 use App\Models\Consumption;
 use Carbon\CarbonImmutable;
 
-final class EloquentConsumptionRepository implements ConsumptionRepository
+
+final class EloquentConsumptionRepository extends AbstractEloquentHourlyRepository implements ConsumptionRepository
 {
     /**
      * @return HourlyConsumption[]
@@ -69,39 +69,16 @@ final class EloquentConsumptionRepository implements ConsumptionRepository
         Pagination $pagination,
     ): PaginatedResult {
 
-        $paginator = Consumption::query()
-            ->orderBy('date')
-            ->paginate(
-                $pagination->perPage,
-                ['*'],
-                'page',
-                $pagination->page,
-            );
-
-        $items = [];
-
-        foreach ($paginator->items() as $row) {
-
-            $hourlyValues = [];
-
-            for ($hour = 1; $hour <= 25; $hour++) {
-                $hourlyValues[$hour] = (float) $row->{"h{$hour}"};
-            }
-
-            $items[] = new DailyHourlyValues(
-                date: CarbonImmutable::instance(
-                    $row->date,
-                ),
-                hourlyValues: $hourlyValues,
-            );
-        }
-
-        return new PaginatedResult(
-            items: $items,
-            currentPage: $paginator->currentPage(),
-            perPage: $paginator->perPage(),
-            total: $paginator->total(),
-            lastPage: $paginator->lastPage(),
+        return $this->paginateModel(
+            $pagination,
         );
+    }
+
+    /**
+     * @return class-string<Consumption>
+     */
+    protected function modelClass(): string
+    {
+        return Consumption::class;
     }
 }

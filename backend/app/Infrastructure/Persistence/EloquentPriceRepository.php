@@ -13,7 +13,7 @@ use App\Domain\ValueObjects\HourlyPrice;
 use App\Models\Price;
 use Carbon\CarbonImmutable;
 
-final class EloquentPriceRepository implements PriceRepository
+final class EloquentPriceRepository  extends AbstractEloquentHourlyRepository implements PriceRepository
 {
     /**
      * @return HourlyPrice[]
@@ -66,42 +66,19 @@ final class EloquentPriceRepository implements PriceRepository
     }
 
     public function paginate(
-        Pagination $pagination,
+    Pagination $pagination,
     ): PaginatedResult {
 
-        $paginator = Price::query()
-            ->orderBy('date')
-            ->paginate(
-                $pagination->perPage,
-                ['*'],
-                'page',
-                $pagination->page,
-            );
-
-        $items = [];
-
-        foreach ($paginator->items() as $row) {
-
-            $hourlyValues = [];
-
-            for ($hour = 1; $hour <= 25; $hour++) {
-                $hourlyValues[$hour] = (float) $row->{"h{$hour}"};
-            }
-
-            $items[] = new DailyHourlyValues(
-                date: CarbonImmutable::instance(
-                    $row->date,
-                ),
-                hourlyValues: $hourlyValues,
-            );
-        }
-
-        return new PaginatedResult(
-            items: $items,
-            currentPage: $paginator->currentPage(),
-            perPage: $paginator->perPage(),
-            total: $paginator->total(),
-            lastPage: $paginator->lastPage(),
+        return $this->paginateModel(
+            $pagination,
         );
+    }
+
+    /**
+     * @return class-string<Price>
+     */
+    protected function modelClass(): string
+    {
+        return Price::class;
     }
 }
