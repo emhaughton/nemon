@@ -1,8 +1,14 @@
 # Nemon
 
-A production-ready starter template for building modern web applications using Laravel as the backend API and Vue.js as the frontend SPA.
+Nemon is a web application for calculating indexed electricity prices from hourly energy consumption and market price data.
 
-The goal of this project is to provide a clean, maintainable and reusable architecture that can be used as the foundation for future projects.
+The application allows users to:
+
+- Browse hourly electricity consumption records.
+- Browse hourly electricity market prices.
+- Calculate an indexed price for a selected date range using a custom formula.
+
+The project has been designed following Clean Architecture principles, keeping the domain independent from Laravel and the infrastructure layer.
 
 ---
 
@@ -15,7 +21,6 @@ The goal of this project is to provide a clean, maintainable and reusable archit
 - MySQL 8.4
 - Redis
 - PHPUnit
-- PHPStan
 - Laravel Pint
 
 ### Frontend
@@ -24,6 +29,7 @@ The goal of this project is to provide a clean, maintainable and reusable archit
 - TypeScript
 - Vue Router
 - Pinia
+- Axios
 - Vite
 - Vitest
 - ESLint
@@ -33,8 +39,34 @@ The goal of this project is to provide a clean, maintainable and reusable archit
 
 - Docker
 - Nginx
+- Redis
 - Mailpit
 - phpMyAdmin
+
+---
+
+## Architecture
+
+The backend follows a layered architecture inspired by Clean Architecture.
+
+```text
+Domain
+    ↑
+Application
+    ↑
+Infrastructure
+    ↑
+HTTP
+```
+
+The project is organised into the following layers:
+
+- **Domain**: Business rules, entities, value objects and contracts.
+- **Application**: Use cases and application DTOs.
+- **Infrastructure**: Persistence, formula evaluation and framework integrations.
+- **HTTP**: Controllers, requests and API responses.
+
+The frontend is implemented as a standalone Vue Single Page Application that communicates with the backend exclusively through REST APIs.
 
 ---
 
@@ -55,25 +87,25 @@ The goal of this project is to provide a clean, maintainable and reusable archit
 
 ---
 
-## Philosophy
+## Features
 
-This starter follows a few simple principles:
-
-- Docker-first development
-- Backend and frontend are independent applications
-- Laravel exposes only APIs
-- Vue is a standalone SPA
-- One service per container
-- Reusable infrastructure
-- Clean architecture
-- Easy to extend
+- Hourly consumption listing
+- Hourly price listing
+- Pagination
+- Indexed price calculation
+- Formula validation
+- API Key authentication
+- Redis cache for paginated endpoints
+- Automatic cache invalidation using Laravel Observers
+- REST API
+- Docker development environment
 
 ---
 
 ## Requirements
 
 - Docker Desktop
-- WSL2
+- WSL2 (Windows)
 - GNU Make
 - Git
 
@@ -81,48 +113,10 @@ This starter follows a few simple principles:
 
 ## Quick Start
 
-Build the project
+Initialize the project
 
 ```bash
-make build
-```
-
-Start the containers
-
-```bash
-make up
-```
-
-Install Laravel dependencies
-
-```bash
-make composer-install
-```
-
-Install Vue dependencies
-
-```bash
-make npm-install
-```
-
-Run migrations
-
-```bash
-make migrate
-```
-
-Start Vite
-
-```bash
-make npm-dev
-```
-
-Get your user and group id
-
-```bash
-id -u
-
-id -g
+make init
 ```
 
 ---
@@ -130,9 +124,9 @@ id -g
 ## Services
 
 | Service | URL |
-|----------|------------------------------|
-| Laravel | http://nemon.test |
-| Vue (Vite) | http://localhost:5173 |
+|----------|--------------------------|
+| Backend API | http://nemon.test |
+| Frontend | http://nemon.test:5173 |
 | phpMyAdmin | http://localhost:8081 |
 | Mailpit | http://localhost:8025 |
 
@@ -140,15 +134,14 @@ id -g
 
 ## Documentation
 
-Additional documentation is available inside each component.
+Additional documentation can be found inside each component.
 
 - backend/README.md
 - frontend/README.md
-- docker/README.md
 - docs/
 
 ---
 
 ## License
 
-This project is intended to be used as a reusable starter template.
+This project was developed as a technical assessment and is intended for educational and demonstration purposes.
