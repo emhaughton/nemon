@@ -24,7 +24,7 @@ FRONTEND_DIR := /frontend
 	shell shell-node \
 	composer-install composer-update composer-dump \
 	artisan key migrate rollback fresh seed optimize cache-clear test pint \
-	setup
+	setup init clean
 
 ###############################################################################
 # Help
@@ -71,6 +71,8 @@ help:
 	@echo ""
 	@echo "Utilities"
 	@echo "  setup             Initialize the project"
+	@echo "  init               Build and initialize the development environment"
+	@echo "  clean              Clean up the development environment"
 	@echo ""
 
 ###############################################################################
@@ -182,3 +184,29 @@ npm-format:
 setup:
 	chmod +x ./bin/setup.sh
 	./bin/setup.sh
+
+init:
+	@echo "Initializing project..."
+	@test -f backend/.env || cp backend/.env.example backend/.env
+	@test -f frontend/.env || cp frontend/.env.example frontend/.env
+	@$(MAKE) build
+	@$(MAKE) up
+	@$(MAKE) composer-install
+	@$(MAKE) npm-install
+	@$(MAKE) migrate
+	@$(MAKE) seed
+	@$(MAKE) npm-dev
+	@echo ""
+	@echo "Project ready!"
+	@echo "Backend : http://nemon.test"
+	@echo "Frontend: http://nemon.test:5173"
+
+clean:
+	@echo "Cleaning up..."
+	@$(DOCKER) down -v
+	@$(DOCKER) down --rmi all
+	@rm -rf backend/vendor
+	@rm -rf frontend/node_modules
+	@rm -f backend/.env
+	@rm -f frontend/.env
+	@echo "Cleanup complete."
