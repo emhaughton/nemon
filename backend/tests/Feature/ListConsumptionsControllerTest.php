@@ -27,7 +27,9 @@ final class ListConsumptionsControllerTest extends TestCase
             ),
         );
 
-        $response = $this->getJson(
+        $response = $this->withHeaders(
+            $this->apiHeaders()
+        )->getJson(
             '/api/consumptions',
         );
 

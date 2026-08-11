@@ -27,7 +27,9 @@ final class ListPricesControllerTest extends TestCase
             ),
         );
 
-        $response = $this->getJson(
+        $response = $this->withHeaders(
+            $this->apiHeaders()
+        )->getJson(
             '/api/prices',
         );
 

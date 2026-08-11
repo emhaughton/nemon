@@ -15,7 +15,9 @@ final class CalculateIndexedPriceControllerTest extends TestCase
 
     public function test_it_requires_all_fields(): void
     {
-        $response = $this->postJson(
+        $response = $this->withHeaders(
+            $this->apiHeaders()
+        )->postJson(
             '/api/indexed-price',
             [],
         );
@@ -45,7 +47,9 @@ final class CalculateIndexedPriceControllerTest extends TestCase
             ],
         );
 
-        $response = $this->postJson(
+        $response = $this->withHeaders(
+            $this->apiHeaders()
+        )->postJson(
             '/api/indexed-price',
             [
                 'from' => '2025-01-01',
@@ -63,7 +67,9 @@ final class CalculateIndexedPriceControllerTest extends TestCase
 
     public function test_it_returns_not_found_when_data_is_missing(): void
     {
-        $response = $this->postJson(
+        $response = $this->withHeaders(
+            $this->apiHeaders()
+        )->postJson(
             '/api/indexed-price',
             [
                 'from' => '2025-01-01',
@@ -91,7 +97,9 @@ final class CalculateIndexedPriceControllerTest extends TestCase
             ],
         );
 
-        $response = $this->postJson(
+        $response = $this->withHeaders(
+            $this->apiHeaders()
+        )->postJson(
             '/api/indexed-price',
             [
                 'from' => '2025-01-01',
