@@ -1,9 +1,17 @@
 <script setup lang="ts">
+
+import FormulaForm from '@/components/indexed-price/FormulaForm.vue';
+
 </script>
 
 <template>
-    <h1>Indexed Price Calculator</h1>
-</template>
 
-<style scoped>
-</style>
+<h2>
+
+    Indexed Price Calculator
+
+</h2>
+
+<FormulaForm />
+
+</template>

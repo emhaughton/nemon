@@ -1,6 +1,17 @@
-import api from './axios'
+import api from './axios';
 
-export const getIndexedPrice = async () => {
-  const { data } = await api.get('/indexed-price')
-  return data
+import type { CalculateIndexedPriceRequest } from '@/types/calculateIndexedPriceRequest';
+import type { CalculateIndexedPriceResponse } from '@/types/calculateIndexedPriceResponse';
+
+export async function calculateIndexedPrice(
+    request: CalculateIndexedPriceRequest,
+): Promise<CalculateIndexedPriceResponse> {
+
+    const response =
+        await api.post<CalculateIndexedPriceResponse>(
+            '/indexed-price',
+            request,
+        );
+
+    return response.data;
 }
