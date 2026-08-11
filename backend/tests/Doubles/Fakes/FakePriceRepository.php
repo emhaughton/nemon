@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Doubles\Fakes;
 
+use App\Application\DTOs\PaginatedResult;
+use App\Application\DTOs\Pagination;
 use App\Domain\Contracts\PriceRepository;
 use App\Domain\ValueObjects\HourlyPrice;
 use Carbon\CarbonImmutable;
 
 final class FakePriceRepository implements PriceRepository
 {
+
+    public PaginatedResult $paginatedResult;
+
     /**
      * @return HourlyPrice[]
      */
@@ -41,5 +46,11 @@ final class FakePriceRepository implements PriceRepository
             static fn (HourlyPrice $price): bool =>
                 $price->date()->betweenIncluded($from, $to),
         ));
+    }
+
+    public function paginate(
+        Pagination $pagination,
+    ): PaginatedResult {
+        return $this->paginatedResult;
     }
 }
