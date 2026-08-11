@@ -22,4 +22,11 @@ final class InvalidFormulaException extends RuntimeException
             previous: $previous,
         );
     }
+
+    public static function missingOmieMd(): self
+    {
+        return new self(
+            'The formula must contain the [OMIE_MD] placeholder.',
+        );
+    }
 }

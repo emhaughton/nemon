@@ -33,7 +33,7 @@ final class IndexedPriceController extends Controller
         );
 
         return response()->json([
-            'indexedPrice' => $response
+            'price_indexed' => $response
                 ->indexedPrice
                 ->value(),
         ]);

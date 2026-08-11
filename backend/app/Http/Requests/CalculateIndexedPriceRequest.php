@@ -6,12 +6,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class CalculateIndexedPriceRequest extends FormRequest
+final class CalculateIndexedPriceRequest extends ApiRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
 
     public function rules(): array
     {

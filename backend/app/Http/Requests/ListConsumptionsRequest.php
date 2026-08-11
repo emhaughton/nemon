@@ -6,12 +6,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class ListConsumptionsRequest extends FormRequest
+final class ListConsumptionsRequest extends ApiRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
 
     public function rules(): array
     {

@@ -5,10 +5,10 @@ declare(strict_types=1);
 use App\Domain\Exceptions\InvalidFormulaException;
 use App\Domain\Exceptions\MissingDateRangeException;
 use App\Domain\Exceptions\MissingHourlyPriceException;
+use App\Http\Responses\ErrorResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -30,43 +30,51 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (
             InvalidFormulaException $exception,
             Request $request,
-        ): ?JsonResponse {
+        ) {
 
             if (! $request->is('api/*')) {
                 return null;
             }
 
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], 400);
+            return ErrorResponse::badRequest(
+                $exception->getMessage(),
+            );
         });
 
         $exceptions->render(function (
             MissingDateRangeException $exception,
             Request $request,
-        ): ?JsonResponse {
+        ) {
 
             if (! $request->is('api/*')) {
                 return null;
             }
 
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], 404);
+            return ErrorResponse::notFound();
         });
 
         $exceptions->render(function (
             MissingHourlyPriceException $exception,
             Request $request,
-        ): ?JsonResponse {
+        ) {
 
             if (! $request->is('api/*')) {
                 return null;
             }
 
-            return response()->json([
-                'message' => $exception->getMessage(),
-            ], 404);
+            return ErrorResponse::notFound();
+        });
+
+        $exceptions->render(function (
+            Throwable $exception,
+            Request $request,
+        ) {
+
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            return ErrorResponse::internalServerError();
         });
 
     })

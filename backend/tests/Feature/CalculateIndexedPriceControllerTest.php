@@ -21,11 +21,9 @@ final class CalculateIndexedPriceControllerTest extends TestCase
         );
 
         $response
-            ->assertStatus(422)
-            ->assertJsonValidationErrors([
-                'from',
-                'to',
-                'formula',
+            ->assertStatus(400)
+            ->assertJson([
+                'message' => 'Invalid or incomplete request data.',
             ]);
     }
 
@@ -59,7 +57,7 @@ final class CalculateIndexedPriceControllerTest extends TestCase
         $response
             ->assertOk()
             ->assertJson([
-                'indexedPrice' => 0.98,
+                'price_indexed' => 0.98,
             ]);
     }
 
