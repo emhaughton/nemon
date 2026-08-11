@@ -37,4 +37,14 @@ final readonly class ErrorResponse
             500,
         );
     }
+
+    public static function unauthorized(): JsonResponse
+    {
+        return response()->json(
+            [
+                'message' => 'Unauthorized.',
+            ],
+            JsonResponse::HTTP_UNAUTHORIZED,
+        );
+    }
 }
