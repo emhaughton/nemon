@@ -1,5 +1,5 @@
 export interface CalculateIndexedPriceResponse {
 
-    indexedPrice: number;
+    price_indexed: number;
 
 }

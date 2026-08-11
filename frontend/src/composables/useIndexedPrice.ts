@@ -40,7 +40,7 @@ export function useIndexedPrice() {
                 });
 
             indexedPrice.value =
-                response.indexedPrice;
+                response.price_indexed;
 
         } catch {
 
