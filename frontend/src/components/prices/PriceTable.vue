@@ -6,7 +6,7 @@ import type { DailyHourlyValues } from '@/types/dailyHourlyValues';
 
 defineProps<{
 
-    consumptions: DailyHourlyValues[];
+    prices: DailyHourlyValues[];
 
 }>();
 
@@ -15,7 +15,7 @@ defineProps<{
 <template>
 
 <HourlyValuesTable
-    :rows="consumptions"
+    :rows="prices"
 />
 
 </template>
