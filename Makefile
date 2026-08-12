@@ -193,6 +193,7 @@ init:
 	@$(MAKE) up
 	@$(MAKE) composer-install
 	@$(MAKE) npm-install
+	@$(MAKE) key
 	@$(MAKE) migrate
 	@$(MAKE) seed
 	@$(MAKE) npm-dev
