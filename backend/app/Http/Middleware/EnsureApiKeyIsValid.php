@@ -17,6 +17,7 @@ final class EnsureApiKeyIsValid
     ): Response {
 
         if (
+            empty($request->header('X-API-Key')) ||
             $request->header('X-API-Key')
             !== config('services.api.key')
         ) {
