@@ -1,0 +1,26 @@
+# fly.toml para el frontend de Nemon
+# Ajusta `app` y `primary_region` según tu cuenta Fly.
+app = "nemon-frontend"
+primary_region = "iad"
+command = "sh -lc 'npm install && npm run build && npm run preview -- --host 0.0.0.0 --port 8080'"
+
+[build]
+  context = ".."
+  dockerfile = "docker/node/Dockerfile"
+  args = { NODE_VERSION = "22-alpine" }
+
+[env]
+  NODE_ENV = "production"
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 100
+    soft_limit = 50
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
