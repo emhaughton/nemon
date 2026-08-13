@@ -42,10 +42,13 @@ export function useIndexedPrice() {
             indexedPrice.value =
                 response.price_indexed;
 
-        } catch {
+        } catch (e) {
+            // Prefer the API-provided message when available
+            const apiMessage = (e as any)?.response?.data?.message;
+            error.value = apiMessage ?? 'Unable to calculate indexed price.';
 
-            error.value =
-                'Unable to calculate indexed price.';
+            // Clear previous result when calculation fails
+            indexedPrice.value = undefined;
 
         } finally {
 

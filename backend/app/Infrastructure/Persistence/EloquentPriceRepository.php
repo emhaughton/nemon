@@ -8,7 +8,6 @@ use App\Application\DTOs\PaginatedResult;
 use App\Application\DTOs\Pagination;
 use App\Domain\Contracts\PriceRepository;
 use App\Domain\Exceptions\MissingDateRangeException;
-use App\Domain\ValueObjects\DailyHourlyValues;
 use App\Domain\ValueObjects\HourlyPrice;
 use App\Models\Price;
 use Carbon\CarbonImmutable;
